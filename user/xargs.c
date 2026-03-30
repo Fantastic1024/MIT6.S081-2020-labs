@@ -4,28 +4,21 @@
 
 int
 main(int argc, char *argv[]){
-	int i;
-	char buf[512];  // input from pipe
-	int n = read(0, &buf, sizeof(buf));
-	if(n > 0 && buf[n-1] == '\n'){
-		buf[n-1] = '\0'; 
-	}
+	int n;
+	int len = 0;
+	char c;  // inputing a line from pipe
+	char buf[512];
+	
+	while(read(0, &c, 1) == 1){
+		if(c == '\n'){
+			if(fork() == 0){
+				
+			}else{
 
-	char *argvP[32];
-	char *argvX[32];
-	for(i = 1; i < argc; i++){
-		argvX[i-1] = argv[i];  // end of xargs' argv
-	}
-
-	argvP[0] = buf;
-	argvP[1] = 0;
-
-	argvX[i-1] = 0;
-
-	if(fork() == 0){
-		exec(argv[1], argvX[2]);
-	}else{
-		wait(0);
-		exec(argv[1], argvP);
+				wait(0);
+				exit(0);
+			}
+			memset(buf, 0, sizeof(buf));
+		}
 	}
 }
