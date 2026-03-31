@@ -2,31 +2,6 @@
 #include "kernel/stat.h"
 #include "user/user.h"
 
-void sieve(int leftPipe[]);
-
-int
-main(int argc, char *argv[])
-{
-	int i;
-	int primesPipe[2];
-
-	pipe(primesPipe);
-  if(fork() == 0){
-		close(primesPipe[1]);
-		sieve(primesPipe);
-		exit(0);
-	}else{
-		close(primesPipe[0]);
-		for(i = 2; i < 36; i++){
-			write(primesPipe[1], &i, 4);
-  	}
-		close(primesPipe[1]);
-		wait(0);
-		exit(0);
-	}
-  
-}
-
 void
 sieve(int leftPipe[])
 {
@@ -67,4 +42,27 @@ sieve(int leftPipe[])
 		wait(0);
 		exit(0);
 	}
+}
+
+int
+main(int argc, char *argv[])
+{
+	int i;
+	int primesPipe[2];
+
+	pipe(primesPipe);
+  if(fork() == 0){
+		close(primesPipe[1]);
+		sieve(primesPipe);
+		exit(0);
+	}else{
+		close(primesPipe[0]);
+		for(i = 2; i < 36; i++){
+			write(primesPipe[1], &i, 4);
+  	}
+		close(primesPipe[1]);
+		wait(0);
+		exit(0);
+	}
+  
 }
